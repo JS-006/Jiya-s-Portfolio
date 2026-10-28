@@ -1,0 +1,30 @@
+/* ===== scroll.css — look & feel of the scroll shell ===== */
+:root{--bg:#F7F6E5;--ink:#194236;--accent:#C96048;--w:1440;--h:810}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);overscroll-behavior:none}
+#deck{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
+
+/* one panel per page file */
+.panel{position:absolute;inset:0;display:grid;place-items:center;will-change:transform,opacity,filter;
+  background:var(--bg);overflow:hidden;backface-visibility:hidden}
+.panel::after{content:"";position:absolute;inset:0;background:#0b2a20;opacity:var(--dim,0);pointer-events:none;z-index:5}
+.panel .frame{position:absolute;left:50%;top:50%;width:calc(var(--w)*1px);height:calc(var(--h)*1px);
+  margin:calc(var(--h)*-.5px) 0 0 calc(var(--w)*-.5px);transform:scale(var(--s,1));transform-origin:center;
+  border:0;background:var(--bg);opacity:0;transition:opacity .45s ease}
+.panel .frame.ready{opacity:1}
+
+/* thin progress line (not clickable) */
+#bar{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:left;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--ink),var(--accent));z-index:50;pointer-events:none}
+/* page counter, bottom-left (not clickable) */
+#count{position:fixed;left:1.2vw;top:50%;translate:0 -50%;writing-mode:vertical-rl;z-index:50;pointer-events:none;
+  font:600 13px/1 'Poppins',system-ui,sans-serif;color:var(--ink);letter-spacing:.12em;mix-blend-mode:multiply}
+#count b{display:inline-block;min-width:1.6em;transition:transform .5s cubic-bezier(.2,1,.2,1),opacity .5s}
+/* "scroll" cue, bottom-centre, fades after first scroll */
+#cue{position:fixed;left:50%;bottom:2.4vh;translate:-50% 0;z-index:50;pointer-events:none;display:grid;justify-items:center;gap:6px;
+  font:600 11px/1 'Poppins',system-ui,sans-serif;color:var(--ink);letter-spacing:.2em;text-transform:uppercase;transition:opacity .6s}
+#cue i{width:20px;height:32px;border:2px solid var(--ink);border-radius:12px;position:relative}
+#cue i::after{content:"";position:absolute;left:50%;top:6px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--ink);animation:wheel 1.5s ease-in-out infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+body.moved #cue,body.last #cue{opacity:0}
+@media (prefers-reduced-motion:reduce){#cue i::after{animation:none}}
